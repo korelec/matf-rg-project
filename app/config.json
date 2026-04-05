@@ -1,6 +1,9 @@
 {
   "resources": {
     "models": {
+      "petrol": {
+        "path": "petrol/petrolstatio.obj"
+      }
     }
   },
   "window": {
