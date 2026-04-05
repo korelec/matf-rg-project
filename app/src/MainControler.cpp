@@ -33,6 +33,7 @@ namespace engine::app {
     }
 
     void MainController::update() {
+        update_camera();
     }
 
     void MainController::begin_draw() {
@@ -66,5 +67,29 @@ namespace engine::app {
         platform->swap_buffers();
     }
 
+    void MainController::update_camera() {
 
+        auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
+        auto graphic  = engine::core::Controller::get<engine::graphics::GraphicsController>();
+        auto camera   = graphic->camera();
+        float dt      = platform->dt();
+
+        // Use Pressed so holding the key moves continuously (JustPressed moves only for one frame).
+        if (platform->key(engine::platform::KeyId::KEY_W).is_down()) {
+            camera->move_camera(engine::graphics::Camera::Movement::FORWARD, dt);
+        }
+        if (platform->key(engine::platform::KeyId::KEY_A).is_down()) {
+            camera->move_camera(engine::graphics::Camera::Movement::LEFT, dt);
+        }
+        if (platform->key(engine::platform::KeyId::KEY_S).is_down()) {
+            camera->move_camera(engine::graphics::Camera::Movement::BACKWARD, dt);
+        }
+        if (platform->key(engine::platform::KeyId::KEY_D).is_down()) {
+            camera->move_camera(engine::graphics::Camera::Movement::RIGHT, dt);
+        }
+
+        auto mouse = platform->mouse();
+        camera->rotate_camera(mouse.dx, mouse.dy);
+        camera->zoom(mouse.scroll);
+    }
 } // namespace engine::app
