@@ -1,8 +1,8 @@
 {
   "resources": {
     "models": {
-      "petrol": {
-        "path": "petrol/petrolstatio.obj"
+      "bandera": {
+        "path": "bandera/Street_light.obj"
       }
     }
   },
