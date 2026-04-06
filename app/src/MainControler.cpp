@@ -3,7 +3,7 @@
 //
 
 #include "../include/MainControler.hpp"
-
+#include <GuiControler.hpp>
 
 #include <engine/graphics/GraphicsController.hpp>
 #include <engine/graphics/OpenGL.hpp>
@@ -68,6 +68,10 @@ namespace engine::app {
     }
 
     void MainController::update_camera() {
+        auto gui = engine::core::Controller::get<app::GUIController>();
+        if (gui->is_enabled()) {
+            return;
+        }
 
         auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
         auto graphic  = engine::core::Controller::get<engine::graphics::GraphicsController>();
