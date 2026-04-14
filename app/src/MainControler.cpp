@@ -4,17 +4,37 @@
 
 #include "../include/MainControler.hpp"
 #include <GuiControler.hpp>
+#include <engine/graphics/Camera.hpp>
 
 #include <engine/graphics/GraphicsController.hpp>
 #include <engine/graphics/OpenGL.hpp>
 #include <engine/platform/PlatformController.hpp>
 #include <engine/resources/ResourcesController.hpp>
+#include <spdlog/spdlog.h>
 
 namespace engine::app {
-    void MainPlatformEventObserver::on_key(engine::platform::Key) {
+
+    class MainPlatformEventObserver : public engine::platform::PlatformEventObserver {
+    public:
+        void on_mouse_move(engine::platform::MousePosition position) override;
+        void on_scroll(platform::MousePosition position) override;
+    };
+
+    void MainPlatformEventObserver::on_mouse_move(engine::platform::MousePosition position) {
+        auto gui_controller=engine::core::Controller::get<GUIController>();
+        if (!gui_controller->is_enabled()) {
+            auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
+            camera->rotate_camera(position.x, position.y);
+
+        }
     }
 
-    void MainPlatformEventObserver::on_mouse_move(engine::platform::MousePosition) {
+    void MainPlatformEventObserver::on_scroll(engine::platform::MousePosition position) {
+        auto gui = engine::core::Controller::get<GUIController>();
+        if (!gui->is_enabled()) {
+            auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
+            camera->zoom(position.y);
+        }
     }
 
     void MainController::initialize() {
@@ -91,9 +111,10 @@ namespace engine::app {
         if (platform->key(engine::platform::KeyId::KEY_D).is_down()) {
             camera->move_camera(engine::graphics::Camera::Movement::RIGHT, dt);
         }
-
         auto mouse = platform->mouse();
+        spdlog::info("Scroll value: {}",  mouse.scroll);
         camera->rotate_camera(mouse.dx, mouse.dy);
-        camera->zoom(mouse.scroll);
+        if (mouse.scroll != 0.0f)
+            camera->zoom(mouse.scroll);
     }
 } // namespace engine::app
