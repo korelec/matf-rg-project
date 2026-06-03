@@ -24,7 +24,7 @@ namespace engine::app {
         auto gui_controller=engine::core::Controller::get<GUIController>();
         if (!gui_controller->is_enabled()) {
             auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
-            camera->rotate_camera(position.x, position.y);
+            camera->rotate_camera(position.dx, position.dy);
 
         }
     }
@@ -77,9 +77,19 @@ namespace engine::app {
         shader->set_mat4("model", model);
         bandera->draw(shader);
     }
+void MainController::draw_skybox() {
+        auto resources=engine::core::Controller::get<engine::resources::ResourcesController>();
+        auto skybox=resources->skybox("night_sky");
+        auto shader=resources->shader("skybox");
+        auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
+        shader->use();
+        shader->set_int("skybox", 0);
+        graphics->draw_skybox(shader,skybox);
+    }
 
     void MainController::draw() {
         draw_bandera();
+        draw_skybox();
     }
 
     void MainController::end_draw() {
@@ -111,10 +121,18 @@ namespace engine::app {
         if (platform->key(engine::platform::KeyId::KEY_D).is_down()) {
             camera->move_camera(engine::graphics::Camera::Movement::RIGHT, dt);
         }
+        if (platform->key(engine::platform::KeyId::KEY_Q).is_down()) {
+            camera->move_camera(engine::graphics::Camera::Movement::UP, dt);
+        }
+        if (platform->key(engine::platform::KeyId::KEY_E).is_down()) {
+            camera->move_camera(engine::graphics::Camera::Movement::DOWN, dt);
+        }
         auto mouse = platform->mouse();
-        spdlog::info("Scroll value: {}",  mouse.scroll);
+        //spdlog::info("Scroll value: {}",  mouse.scroll);
         camera->rotate_camera(mouse.dx, mouse.dy);
-        if (mouse.scroll != 0.0f)
+        if (mouse.scroll != 0.0f){
             camera->zoom(mouse.scroll);
+        //    graphic->perspective_params().FOV = glm::radians(camera->Zoom);
+        }
     }
 } // namespace engine::app
