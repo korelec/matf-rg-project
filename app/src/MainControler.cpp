@@ -132,7 +132,7 @@ void MainController::draw_skybox() {
         camera->rotate_camera(mouse.dx, mouse.dy);
         if (mouse.scroll != 0.0f){
             camera->zoom(mouse.scroll);
-        //    graphic->perspective_params().FOV = glm::radians(camera->Zoom);
+            graphic->perspective_params().FOV = glm::radians(camera->Zoom);
         }
     }
 } // namespace engine::app
