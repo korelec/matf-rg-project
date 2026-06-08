@@ -64,7 +64,7 @@ namespace engine::app {
         //model
         auto resources            = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics             = engine::core::Controller::get<engine::graphics::GraphicsController>();
-        resources::Model *bandera = resources->model("bandera");
+        resources::Model *firepit = resources->model("firepit");
         //shader
         resources::Shader *shader = resources->shader("first");
 
@@ -75,7 +75,7 @@ namespace engine::app {
         model           = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
         model           = glm::scale(model, glm::vec3(0.3f));
         shader->set_mat4("model", model);
-        bandera->draw(shader);
+        firepit->draw(shader);
     }
 
 void MainController::draw_fire() {
