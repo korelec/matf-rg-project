@@ -99,6 +99,21 @@ void MainController::draw_fire() {
 
         fire->draw(shader);
     }
+void MainController::draw_floor() {
+        auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
+        auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
+
+        resources::Shader *shader = resources->shader("first");
+        shader->use();
+        shader->set_mat4("projection", graphics->projection_matrix());
+        shader->set_mat4("view",       graphics->camera()->view_matrix());
+        shader->set_mat4("model",      glm::mat4(1.0f));
+        shader->set_vec3("lightPos",   glm::vec3(0.0f, 1.25f, 0.0f));
+        shader->set_vec3("lightColor", glm::vec3(1.0f, 0.5f, 0.15f));
+        shader->set_vec3("viewPos",    graphics->camera()->Position);
+
+        resources->model("floor")->draw(shader);
+    }
 
 void MainController::draw_skybox() {
         auto resources=engine::core::Controller::get<engine::resources::ResourcesController>();
@@ -113,6 +128,7 @@ void MainController::draw_skybox() {
     void MainController::draw() {
         draw_firepit();
         draw_fire();
+        draw_floor();
         draw_skybox();
     }
 

@@ -13,6 +13,10 @@
         "path": "Tree/tree01.obj",
         "flip_uvs": true
       },
+      "floor": {
+        "path": "floor/floor.obj",
+        "flip_uvs": false
+      },
       "firepit": {
         "path": "campfire/campfire.obj",
         "flip_uvs": true

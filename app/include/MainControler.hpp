@@ -31,6 +31,7 @@ private:
 
     void draw_firepit();
     void draw_fire();
+    void draw_floor();
 
     void draw() override;
 
