@@ -60,7 +60,7 @@ namespace engine::app {
         engine::graphics::OpenGL::clear_buffers();
     }
 
-    void MainController::draw_bandera() {
+    void MainController::draw_firepit() {
         //model
         auto resources            = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics             = engine::core::Controller::get<engine::graphics::GraphicsController>();
@@ -72,11 +72,31 @@ namespace engine::app {
         shader->set_mat4("projection", graphics->projection_matrix());
         shader->set_mat4("view", graphics->camera()->view_matrix());
         glm::mat4 model = glm::mat4(1.0f);
-        model           = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
+        model           = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
         model           = glm::scale(model, glm::vec3(0.3f));
         shader->set_mat4("model", model);
         bandera->draw(shader);
     }
+
+void MainController::draw_fire() {
+        auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
+        auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
+
+        resources::Model *fire  = resources->model("fire");
+        resources::Shader *shader = resources->shader("fire");
+
+        shader->use();
+        shader->set_mat4("projection", graphics->projection_matrix());
+        shader->set_mat4("view", graphics->camera()->view_matrix());
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 1.25f, 0.0f));
+        model = glm::scale(model, glm::vec3(6.0f));
+        shader->set_mat4("model", model);
+
+        fire->draw(shader);
+    }
+
 void MainController::draw_skybox() {
         auto resources=engine::core::Controller::get<engine::resources::ResourcesController>();
         auto skybox=resources->skybox("night_sky");
@@ -88,7 +108,8 @@ void MainController::draw_skybox() {
     }
 
     void MainController::draw() {
-        draw_bandera();
+        draw_firepit();
+        draw_fire();
         draw_skybox();
     }
 

@@ -1,8 +1,13 @@
 {
   "resources": {
     "models": {
-      "bandera": {
-        "path": "bandera/Street_light.obj"
+      "fire": {
+        "path": "Fire/model.obj",
+        "flip_uvs": true
+      },
+      "firepit": {
+        "path": "campfire/campfire.obj",
+        "flip_uvs": true
       }
     }
   },

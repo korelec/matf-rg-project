@@ -29,7 +29,8 @@ private:
 
     void begin_draw() override;
 
-    void draw_bandera();
+    void draw_firepit();
+    void draw_fire();
 
     void draw() override;
 
