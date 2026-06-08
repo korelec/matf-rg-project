@@ -67,10 +67,13 @@ namespace engine::app {
         resources::Model *firepit = resources->model("firepit");
         //shader
         resources::Shader *shader = resources->shader("first");
-
         shader->use();
         shader->set_mat4("projection", graphics->projection_matrix());
         shader->set_mat4("view", graphics->camera()->view_matrix());
+
+        shader->set_vec3("lightPos",glm::vec3(0.0f, 1.25f, 0.0f));
+        shader->set_vec3("lightColor",glm::vec3(1.0f, 0.75f, 0.75f));
+        shader->set_vec3("viewPos",graphics->camera()->Position);
         glm::mat4 model = glm::mat4(1.0f);
         model           = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
         model           = glm::scale(model, glm::vec3(0.3f));

@@ -23,12 +23,12 @@ void main() {
 //#shader fragment
 #version 330 core
 
-in vec2 TexCords;
+//in vec2 TexCords;
 in vec3 FragPos;
 
 out vec4 FragColor;
 
-uniform sampler2D texture_diffuse1;
+//uniform sampler2D texture_diffuse1;
 
 void main() {
         FragColor = vec4(1.0f, 1.0f-(1.0/(FragPos.y)), 0.0f, 1.0);
