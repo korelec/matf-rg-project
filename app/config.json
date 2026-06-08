@@ -5,6 +5,14 @@
         "path": "Fire/model.obj",
         "flip_uvs": true
       },
+      "cottage": {
+        "path": "LogCabin/Cottage.obj",
+        "flip_uvs": true
+      },
+      "tree": {
+        "path": "Tree/tree01.obj",
+        "flip_uvs": true
+      },
       "firepit": {
         "path": "campfire/campfire.obj",
         "flip_uvs": true
