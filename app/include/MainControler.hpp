@@ -31,6 +31,10 @@ private:
 
     void draw_firepit();
     void draw_fire();
+    void draw_log1();
+    void draw_log2();
+    void draw_cottage();
+    void draw_trees();
     void draw_floor();
 
     void draw() override;

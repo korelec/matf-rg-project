@@ -9,8 +9,12 @@
         "path": "LogCabin/Cottage.obj",
         "flip_uvs": true
       },
-      "tree": {
+      "tree1": {
         "path": "Tree/tree01.obj",
+        "flip_uvs": true
+      },
+      "log": {
+        "path": "Log/PUSHILIN_log.obj",
         "flip_uvs": true
       },
       "floor": {

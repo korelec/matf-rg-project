@@ -99,6 +99,109 @@ void MainController::draw_fire() {
 
         fire->draw(shader);
     }
+
+
+void MainController::draw_log1() {
+        //model
+        auto resources            = engine::core::Controller::get<engine::resources::ResourcesController>();
+        auto graphics             = engine::core::Controller::get<engine::graphics::GraphicsController>();
+        resources::Model *log= resources->model("log");
+        //shader
+        resources::Shader *shader = resources->shader("first");
+        shader->use();
+        shader->set_mat4("projection", graphics->projection_matrix());
+        shader->set_mat4("view", graphics->camera()->view_matrix());
+
+        shader->set_vec3("lightPos",glm::vec3(0.0f, 1.25f, 0.0f));
+        shader->set_vec3("lightColor",glm::vec3(1.0f, 0.75f, 0.75f));
+        shader->set_vec3("viewPos",graphics->camera()->Position);
+        glm::mat4 model = glm::mat4(1.0f);
+
+            model           = glm::translate(model, glm::vec3(-6.0f, 1.4f, 6.0f));
+            model=glm::rotate(model,glm::pi<float>()/(-4.5f),glm::vec3(0.0f,1.0f,0.0f));
+            model           = glm::scale(model, glm::vec3(2.75f));
+            shader->set_mat4("model", model);
+            log->draw(shader);
+
+    }
+
+void MainController::draw_log2() {
+        //model
+        auto resources            = engine::core::Controller::get<engine::resources::ResourcesController>();
+        auto graphics             = engine::core::Controller::get<engine::graphics::GraphicsController>();
+        resources::Model *log= resources->model("log");
+        //shader
+        resources::Shader *shader = resources->shader("first");
+        shader->use();
+        shader->set_mat4("projection", graphics->projection_matrix());
+        shader->set_mat4("view", graphics->camera()->view_matrix());
+
+        shader->set_vec3("lightPos",glm::vec3(0.0f, 1.25f, 0.0f));
+        shader->set_vec3("lightColor",glm::vec3(1.0f, 0.75f, 0.75f));
+        shader->set_vec3("viewPos",graphics->camera()->Position);
+        glm::mat4 model = glm::mat4(1.0f);
+
+        model           = glm::translate(model, glm::vec3(6.0f, 1.4f, 6.0f));
+        model=glm::rotate(model,glm::pi<float>()/(4.5f)+glm::pi<float>(),glm::vec3(0.0f,1.0f,0.0f));
+        model           = glm::scale(model, glm::vec3(2.75f));
+        shader->set_mat4("model", model);
+        log->draw(shader);
+
+    }
+void MainController::draw_cottage() {
+        //model
+        auto resources            = engine::core::Controller::get<engine::resources::ResourcesController>();
+        auto graphics             = engine::core::Controller::get<engine::graphics::GraphicsController>();
+        resources::Model *cottage = resources->model("cottage");
+        //shader
+        resources::Shader *shader = resources->shader("first");
+        shader->use();
+        shader->set_mat4("projection", graphics->projection_matrix());
+        shader->set_mat4("view", graphics->camera()->view_matrix());
+
+        shader->set_vec3("lightPos",glm::vec3(0.0f, 1.25f, 0.0f));
+        shader->set_vec3("lightColor",glm::vec3(1.0f, 0.75f, 0.75f));
+        shader->set_vec3("viewPos",graphics->camera()->Position);
+        glm::mat4 model = glm::mat4(1.0f);
+        model           = glm::translate(model, glm::vec3(20.0f, -2.0f, -15.0f));
+        model = glm::scale(model, glm::vec3(0.025f));
+        shader->set_mat4("model", model);
+        cottage->draw(shader);
+    }
+
+void MainController::draw_trees() {
+        auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
+        auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
+
+        resources::Model  *tree=resources->model("tree1");
+        resources::Shader *shader = resources->shader("first");
+
+        shader->use();
+        shader->set_mat4("projection", graphics->projection_matrix());
+        shader->set_mat4("view",       graphics->camera()->view_matrix());
+        shader->set_vec3("lightPos",   glm::vec3(0.0f, 1.25f, 0.0f));
+        shader->set_vec3("lightColor", glm::vec3(1.0f, 0.75f, 0.75f));
+        shader->set_vec3("viewPos",    graphics->camera()->Position);
+
+        for (int j=1;j<10;j++) {
+            float p=0.0f;
+            if (j%2)    p=glm::pi<float>()/20;
+            for (int i=0;i<20;i++) {
+
+                float ugao=(2.0f* glm::pi<float>() / 20)*i+p;
+                float x=cos(ugao)*(45.0f+8.0f*j)+10.0f;
+                float z=sin(ugao)*(45.0f+8.0f*j)-30.0f;
+                //resources::Model *tree=tree_models[i%3];
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, glm::vec3(x, 0.0f, z));
+                model = glm::rotate(model, ugao + glm::pi<float>(), glm::vec3(0.0f, 1.0f, 0.0f));
+                model = glm::scale(model, glm::vec3(0.03f));
+                shader->set_mat4("model", model);
+                tree->draw(shader);
+            }
+        }
+    }
+
 void MainController::draw_floor() {
         auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
@@ -128,6 +231,10 @@ void MainController::draw_skybox() {
     void MainController::draw() {
         draw_firepit();
         draw_fire();
+        draw_trees();
+        draw_cottage();
+        draw_log1();
+        draw_log2();
         draw_floor();
         draw_skybox();
     }
