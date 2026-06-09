@@ -29,35 +29,38 @@ in vec3 FragPos;
 
 out vec4 FragColor;
 
-// Must match engine convention: Mesh binds diffuse samplers as texture_diffuse1, texture_diffuse2, ...
+struct Light{//fire and moon
+    vec3 direction;
+    vec3 position;
+    vec3 color;
+    float ambientStrength;
+    float specStrength;
+};
+
 uniform sampler2D texture_diffuse1;
-uniform vec3 lightPos;
-uniform vec3 lightColor;
+uniform Light fire;
 uniform vec3 viewPos;
 
 void main() {
     vec3 texColor = texture(texture_diffuse1, TexCords).rgb;
 
-    // Ambient — malo topline čak i u senci
-    float ambientStrength = 0.75;
-    vec3 ambient = ambientStrength * lightColor * texColor;
 
-    // Diffuse
+    vec3 ambient = fire.ambientStrength * fire.color * texColor;
+
     vec3 norm     = normalize(Normal);
-    vec3 lightDir = normalize(lightPos - FragPos);
+    vec3 lightDir = normalize(fire.position - FragPos);
     float diff    = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse  = diff * lightColor * texColor;
+    vec3 diffuse  = diff * fire.color * texColor;
 
-    float specStrength = 0.05;
     vec3 viewDir  = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
     float spec    = pow(max(dot(viewDir, reflectDir), 0.0), 16.0);
-    vec3 specular = specStrength * spec * lightColor;
+    vec3 specular = fire.specStrength * spec * fire.color;
 
-    float dist        = length(lightPos - FragPos);
-    float attenuation = 1.0 / (1.0 + 0.14 * dist + 0.07 * dist * dist);
+    float dist        = length(fire.position- FragPos);
+    float attenuation = 1.0 / (1.0 + 0.02 * dist + 0.005 * dist * dist);
 
     vec3 result = (ambient + (diffuse + specular) * attenuation);
 
-     FragColor = vec4(result, 1.0);
+     FragColor = vec4(result, 1.0);//
 }
