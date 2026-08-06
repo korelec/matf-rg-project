@@ -4,6 +4,7 @@
 
 #include "../include/MainControler.hpp"
 #include <GuiControler.hpp>
+#include <GuiLightController.hpp>
 #include <engine/graphics/Camera.hpp>
 
 #include <engine/graphics/GraphicsController.hpp>
@@ -64,10 +65,14 @@ namespace engine::app {
         auto graphics= engine::core::Controller::get<engine::graphics::GraphicsController>();
         shader->use();
 
+        auto guilight=engine::core::Controller::get<engine::app::GUILightController>();
         shader->set_vec3 ("fire.position",glm::vec3(0.0f, 1.25f, 0.0f));
-        shader->set_vec3 ("fire.color",glm::vec3(1.0f, 0.75f, 0.75f));
-        shader->set_float("fire.ambientStrength", 0.2f);
-        shader->set_float("fire.specStrength",    0.5f);
+        //shader->set_vec3 ("fire.color",glm::vec3(1.0f, 0.75f, 0.75f));
+        shader->set_vec3("fire.color",guilight->colorfire());
+        shader->set_float("fire.specStrength",guilight->strengthfire());
+        shader->set_float("fire.ambientStrength",guilight->strengthfire());
+        //shader->set_float("fire.ambientStrength", 0.2f);
+        //shader->set_float("fire.specStrength",    0.5f);
 
         shader->set_vec3 ("moon.direction",glm::vec3(0.3f, 0.8f, 0.4f));
         shader->set_vec3 ("moon.color",glm::vec3(0.55f, 0.6f, 0.75f));

@@ -70,7 +70,7 @@ void main() {
     vec3 specular_moon=moon.specStrength * spec_moon * moon.color;
 
     float dist        = length(fire.position- FragPos);
-    float attenuation = 1.0 / (1.0 + 0.02 * dist + 0.005 * dist * dist);//only for fire
+    float attenuation = 1.0 / (1.0 + 0.02 * dist + 0.005 * dist * dist)*fire.ambientStrength;//only for fire
 
     vec3 result_fire = (ambient_fire + (diffuse_fire + specular_fire) * attenuation);
     vec3 result_moon=ambient_moon + diffuse_moon + specular_moon;
