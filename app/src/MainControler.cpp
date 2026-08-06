@@ -60,21 +60,33 @@ namespace engine::app {
         engine::graphics::OpenGL::clear_buffers();
     }
 
+    void MainController::define_light(engine::resources::Shader *shader) {
+        auto graphics= engine::core::Controller::get<engine::graphics::GraphicsController>();
+        shader->use();
+
+        shader->set_vec3 ("fire.position",glm::vec3(0.0f, 1.25f, 0.0f));
+        shader->set_vec3 ("fire.color",glm::vec3(1.0f, 0.75f, 0.75f));
+        shader->set_float("fire.ambientStrength", 0.2f);
+        shader->set_float("fire.specStrength",    0.5f);
+
+        shader->set_vec3 ("moon.direction",glm::vec3(0.3f, 0.8f, 0.4f));
+        shader->set_vec3 ("moon.color",glm::vec3(0.55f, 0.6f, 0.75f));
+        shader->set_float("moon.ambientStrength", 0.08f);
+        shader->set_float("moon.specStrength",    0.3f);
+
+        shader->set_vec3("viewPos",graphics->camera()->Position);
+    }
+
+
     void MainController::draw_firepit() {
         //model
         auto resources            = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics             = engine::core::Controller::get<engine::graphics::GraphicsController>();
         resources::Model *firepit = resources->model("firepit");
-        //shader
-        resources::Shader *shader = resources->shader("first");
-        shader->use();
+        resources::Shader* shader=resources->shader("first");
+        define_light(shader);
         shader->set_mat4("projection", graphics->projection_matrix());
         shader->set_mat4("view", graphics->camera()->view_matrix());
-        shader->set_vec3 ("fire.position",glm::vec3(0.0f, 1.25f, 0.0f));
-        shader->set_vec3 ("fire.color",glm::vec3(1.0f, 0.75f, 0.75f));
-        shader->set_float("fire.ambientStrength", 0.2f);
-        shader->set_float("fire.specStrength",    0.5f);
-        shader->set_vec3("viewPos",graphics->camera()->Position);
         glm::mat4 model = glm::mat4(1.0f);
         model           = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
         model           = glm::scale(model, glm::vec3(0.3f));
@@ -109,15 +121,11 @@ void MainController::draw_log1() {
         resources::Model *log= resources->model("log");
         //shader
         resources::Shader *shader = resources->shader("first");
-        shader->use();
+        define_light(shader);
+
         shader->set_mat4("projection", graphics->projection_matrix());
         shader->set_mat4("view", graphics->camera()->view_matrix());
 
-        shader->set_vec3 ("fire.position",glm::vec3(0.0f, 1.25f, 0.0f));
-        shader->set_vec3 ("fire.color",glm::vec3(1.0f, 0.75f, 0.75f));
-        shader->set_float("fire.ambientStrength", 0.2f);
-        shader->set_float("fire.specStrength",    0.5f);
-        shader->set_vec3("viewPos",graphics->camera()->Position);
         glm::mat4 model = glm::mat4(1.0f);
 
             model           = glm::translate(model, glm::vec3(-6.0f, 1.4f, 6.0f));
@@ -135,15 +143,11 @@ void MainController::draw_log2() {
         resources::Model *log= resources->model("log");
         //shader
         resources::Shader *shader = resources->shader("first");
-        shader->use();
+        define_light(shader);
+
         shader->set_mat4("projection", graphics->projection_matrix());
         shader->set_mat4("view", graphics->camera()->view_matrix());
 
-        shader->set_vec3 ("fire.position",glm::vec3(0.0f, 1.25f, 0.0f));
-        shader->set_vec3 ("fire.color",glm::vec3(1.0f, 0.75f, 0.75f));
-        shader->set_float("fire.ambientStrength", 0.2f);
-        shader->set_float("fire.specStrength",    0.5f);
-        shader->set_vec3("viewPos",graphics->camera()->Position);
         glm::mat4 model = glm::mat4(1.0f);
 
         model           = glm::translate(model, glm::vec3(6.0f, 1.4f, 6.0f));
@@ -160,15 +164,10 @@ void MainController::draw_cottage() {
         resources::Model *cottage = resources->model("cottage");
         //shader
         resources::Shader *shader = resources->shader("first");
-        shader->use();
+        define_light(shader);
         shader->set_mat4("projection", graphics->projection_matrix());
         shader->set_mat4("view", graphics->camera()->view_matrix());
 
-        shader->set_vec3 ("fire.position",glm::vec3(0.0f, 1.25f, 0.0f));
-        shader->set_vec3 ("fire.color",glm::vec3(1.0f, 0.75f, 0.75f));
-        shader->set_float("fire.ambientStrength", 0.2f);
-        shader->set_float("fire.specStrength",    0.5f);
-        shader->set_vec3("viewPos",graphics->camera()->Position);
         glm::mat4 model = glm::mat4(1.0f);
         model           = glm::translate(model, glm::vec3(20.0f, -2.0f, -15.0f));
         model = glm::scale(model, glm::vec3(0.025f));
@@ -183,14 +182,9 @@ void MainController::draw_trees() {
         resources::Model  *tree=resources->model("tree1");
         resources::Shader *shader = resources->shader("first");
 
-        shader->use();
+        define_light(shader);
         shader->set_mat4("projection", graphics->projection_matrix());
         shader->set_mat4("view",       graphics->camera()->view_matrix());
-        shader->set_vec3 ("fire.position",glm::vec3(0.0f, 1.25f, 0.0f));
-        shader->set_vec3 ("fire.color",glm::vec3(1.0f, 0.75f, 0.75f));
-        shader->set_float("fire.ambientStrength", 0.2f);
-        shader->set_float("fire.specStrength",    0.5f);
-        shader->set_vec3("viewPos",    graphics->camera()->Position);
 
         for (int j=1;j<10;j++) {
             float p=0.0f;
@@ -216,14 +210,10 @@ void MainController::draw_floor() {
         auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
 
         resources::Shader *shader = resources->shader("first");
-        shader->use();
+        define_light(shader);
         shader->set_mat4("projection", graphics->projection_matrix());
         shader->set_mat4("view",       graphics->camera()->view_matrix());
         shader->set_mat4("model",      glm::mat4(1.0f));
-        shader->set_vec3 ("fire.position",glm::vec3(0.0f, 1.25f, 0.0f));
-        shader->set_vec3 ("fire.color",glm::vec3(1.0f, 0.75f, 0.75f));
-        shader->set_float("fire.ambientStrength", 0.2f);
-        shader->set_float("fire.specStrength",    0.5f);
         shader->set_vec3("viewPos",    graphics->camera()->Position);
 
         resources->model("floor")->draw(shader);

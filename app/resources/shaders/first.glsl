@@ -39,28 +39,42 @@ struct Light{//fire and moon
 
 uniform sampler2D texture_diffuse1;
 uniform Light fire;
+uniform Light moon;
 uniform vec3 viewPos;
 
 void main() {
     vec3 texColor = texture(texture_diffuse1, TexCords).rgb;
 
 
-    vec3 ambient = fire.ambientStrength * fire.color * texColor;
+    vec3 ambient_fire = fire.ambientStrength * fire.color * texColor;
+    vec3 ambient_moon=moon.ambientStrength * moon.color * texColor;
 
     vec3 norm     = normalize(Normal);
-    vec3 lightDir = normalize(fire.position - FragPos);
-    float diff    = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse  = diff * fire.color * texColor;
+    vec3 lightDir_fire = normalize(fire.position - FragPos);
+    vec3 lightDir_moon=normalize(moon.direction);
+
+    float diff_fire    = max(dot(norm, lightDir_fire), 0.0);
+    vec3 diffuse_fire  = diff_fire * fire.color * texColor;
+
+    float diff_moon= max(dot(norm,lightDir_moon),0.0);
+    vec3 diffuse_moon=diff_moon*moon.color* texColor;
+
 
     vec3 viewDir  = normalize(viewPos - FragPos);
-    vec3 reflectDir = reflect(-lightDir, norm);
-    float spec    = pow(max(dot(viewDir, reflectDir), 0.0), 16.0);
-    vec3 specular = fire.specStrength * spec * fire.color;
+    vec3 reflectDir_fire = reflect(-lightDir_fire, norm);
+    float spec_fire    = pow(max(dot(viewDir, reflectDir_fire), 0.0), 16.0);
+    vec3 specular_fire = fire.specStrength * spec_fire * fire.color;
+
+    vec3 reflectDir_moon=reflect(-lightDir_moon,norm);
+    float spec_moon=pow(max(dot(viewDir,reflectDir_moon),0.0),4.0);
+    vec3 specular_moon=moon.specStrength * spec_moon * moon.color;
 
     float dist        = length(fire.position- FragPos);
-    float attenuation = 1.0 / (1.0 + 0.02 * dist + 0.005 * dist * dist);
+    float attenuation = 1.0 / (1.0 + 0.02 * dist + 0.005 * dist * dist);//only for fire
 
-    vec3 result = (ambient + (diffuse + specular) * attenuation);
+    vec3 result_fire = (ambient_fire + (diffuse_fire + specular_fire) * attenuation);
+    vec3 result_moon=ambient_moon + diffuse_moon + specular_moon;
+    vec3 result=result_fire+result_moon;
 
      FragColor = vec4(result, 1.0);//
 }

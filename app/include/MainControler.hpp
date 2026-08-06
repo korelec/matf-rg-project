@@ -9,6 +9,7 @@
 
 #include <engine/platform/Input.hpp>
 #include <engine/platform/PlatformEventObserver.hpp>
+#include <engine/resources/Shader.hpp>
 
 namespace engine::app {
 
@@ -28,6 +29,8 @@ private:
     void update() override;
 
     void begin_draw() override;
+
+    void define_light(engine::resources::Shader* shader);
 
     void draw_firepit();
     void draw_fire();
