@@ -17,8 +17,8 @@
         "path": "Log/PUSHILIN_log.obj",
         "flip_uvs": true
       },
-      "floor": {
-        "path": "floor/floor.obj",
+      "ground": {
+        "path": "ground/floor.obj",
         "flip_uvs": false
       },
       "firepit": {

@@ -225,14 +225,15 @@ void MainController::draw_floor() {
         auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
 
-        resources::Shader *shader = resources->shader("first");
+        resources::Shader *shader = resources->shader("floor");
         define_light(shader);
         shader->set_mat4("projection", graphics->projection_matrix());
         shader->set_mat4("view",       graphics->camera()->view_matrix());
         shader->set_mat4("model",      glm::mat4(1.0f));
         shader->set_vec3("viewPos",    graphics->camera()->Position);
+        shader->set_float("tileScale",20.0);
 
-        resources->model("floor")->draw(shader);
+        resources->model("ground")->draw(shader);
     }
 
 void MainController::draw_skybox() {
