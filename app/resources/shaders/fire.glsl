@@ -29,9 +29,13 @@ in vec3 FragPos;
 out vec4 FragColor;
 
 //uniform sampler2D texture_diffuse1;
-
+uniform float time;
+uniform float brightness;
 void main() {
-        FragColor = vec4(1.0f, 1.0f-(1.0/(FragPos.y)), 0.0f, 1.0);
+        float gradient=sin(time*2.2)*0.08;
+        float green=clamp(1.0/(FragPos.y)+gradient,0.0f,1.0f);
+        vec4 flame_color = vec4(1.0f, green, 0.0f, 1.0);
+        FragColor=vec4(flame_color*(brightness+0.2f));
 }
 
 
