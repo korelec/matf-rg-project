@@ -40,6 +40,12 @@ namespace engine::app {
 
     void MainController::initialize() {
         engine::graphics::OpenGL::enable_depth_testing();
+
+        auto camera=engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
+        camera->Position=glm::vec3(-20.0,4.0,-4.0);
+        camera->Yaw=5.0;
+        camera->Pitch=-3.5;
+        camera->rotate_camera(0.0f,0.0f);
     }
 
     bool MainController::loop() {
