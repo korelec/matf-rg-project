@@ -2,4 +2,5 @@ newmtl floor_mat
 Ka 1.0 1.0 1.0
 Kd 1.0 1.0 1.0
 map_Kd ground_0029_color_2k.jpg
-map_Bump ground_0029_normal_opengl_2k.png
+norm ground_0029_normal_opengl_2k.png
+map_Bump ground_0029_height_2k.png

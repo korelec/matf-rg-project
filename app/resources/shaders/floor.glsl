@@ -10,6 +10,10 @@ out vec2 TexCords;
 out vec3 FragPos;
 out mat3 TBN;
 
+out vec3 TangentViewPos;
+out vec3 TangentFragPos;
+uniform vec3 viewPos;
+
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
@@ -28,6 +32,9 @@ void main() {
     Tangent=normalize(Tangent-dot(Tangent,Normal)*Normal);
     Bitangent=cross(Normal,Tangent);
     TBN=mat3(Tangent,Bitangent,Normal);
+    mat3 TBNinverse=transpose(TBN);
+    TangentViewPos=TBNinverse*viewPos;
+    TangentFragPos=TBNinverse*FragPos;
 
     TexCords = aTexCords*tileScale;
     gl_Position = projection * view * vec4(FragPos, 1.0);
@@ -40,6 +47,8 @@ in vec2 TexCords;
 //in vec3 Normal;
 in mat3 TBN;
 in vec3 FragPos;
+in vec3 TangentViewPos;
+in vec3 TangentFragPos;
 
 out vec4 FragColor;
 
@@ -53,16 +62,27 @@ struct Light{//fire and moon
 
 uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_height1;
+uniform sampler2D texture_normal1;
 uniform Light fire;
 uniform Light moon;
 uniform vec3 viewPos;
 
+vec2 ParallaxMapping(vec2 texCords,vec3 viewDir){
+    float height=texture(texture_height1,texCords).r;
+    vec2 p=viewDir.xy/max(viewDir.z,0.15f)*(height*0.01f);
+    return texCords-p;
+}
+
+
 void main() {
 
-    vec3 sampledNormal = texture(texture_height1, TexCords).rgb;
+    vec3 viewDirTangent=normalize(TangentViewPos-TangentFragPos);
+    vec2 texCords=ParallaxMapping(TexCords,viewDirTangent);
+
+    vec3 sampledNormal = texture(texture_normal1, texCords).rgb;
     sampledNormal = normalize(sampledNormal * 2.0 - 1.0);
 
-    vec3 texColor = texture(texture_diffuse1, TexCords).rgb;
+    vec3 texColor = texture(texture_diffuse1, texCords).rgb;
 
 
     vec3 ambient_fire = fire.ambientStrength * fire.color * texColor;
