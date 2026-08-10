@@ -10,6 +10,7 @@
 #include <engine/resources/Model.hpp>
 #include <engine/resources/Shader.hpp>
 #include <engine/resources/Skybox.hpp>
+#include <engine/resources/ParallaxMapping.hpp>
 #include <engine/resources/Texture.hpp>
 #include <unordered_map>
 
@@ -60,6 +61,10 @@ public:
     */
     Skybox *skybox(const std::string &name,
                    const std::filesystem::path &path = "", bool flip_uvs = false);
+    Parallax *parallax(const std::string &name,
+                    const std::filesystem::path &diffuse_path,
+                    const std::filesystem::path &normal_path,
+                    const std::filesystem::path &height_path);
 
     /**
     * @brief Retrieves the @ref Shader with a given name. You are not supposed to call `delete` on this pointer.
@@ -112,6 +117,7 @@ private:
     * @brief A hashmap of all the loaded @ref Skybox.
     */
     std::unordered_map<std::string, std::unique_ptr<Skybox>> m_sky_boxes;
+    std::unordered_map<std::string,std::unique_ptr<Parallax>> m_parallax;
     /**
     * @brief A hashmap of all the loaded @ref Shader.
     */
@@ -121,6 +127,7 @@ private:
     const std::filesystem::path m_textures_path = "resources/textures";
     const std::filesystem::path m_shaders_path = "resources/shaders";
     const std::filesystem::path m_skyboxes_path = "resources/skyboxes";
+    const std::filesystem::path m_parallax_path = "resources/parallax";
 };
 }// namespace engine::resources
 

@@ -14,6 +14,7 @@ struct ImGuiContext;
 
 namespace engine::resources {
 class Skybox;
+class Parallax;
 
 class Shader;
 }// namespace engine::resources
@@ -85,7 +86,7 @@ public:
     * @brief Draws a @ref resources::Skybox with the @ref resources::Shader.
     */
     void draw_skybox(const resources::Shader *shader, const resources::Skybox *skybox);
-
+    void draw_parallax_mapping(const resources::Shader *shader,const resources::Parallax *parallax);
     Camera *camera() {
         return &m_camera;
     }

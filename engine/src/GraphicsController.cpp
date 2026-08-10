@@ -7,6 +7,7 @@
 #include <engine/graphics/OpenGL.hpp>
 #include <engine/platform/PlatformController.hpp>
 #include <engine/resources/Skybox.hpp>
+#include <engine/resources/ParallaxMapping.hpp>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
@@ -85,5 +86,19 @@ void GraphicsController::draw_skybox(const resources::Shader *shader, const reso
     CHECKED_GL_CALL(glBindVertexArray, 0);
     CHECKED_GL_CALL(glDepthFunc, GL_LESS);// set depth function back to default
     CHECKED_GL_CALL(glBindTexture, GL_TEXTURE_CUBE_MAP, 0);
+}
+void GraphicsController::draw_parallax_mapping(const resources::Shader *shader, const resources::Parallax *parallax) {
+    CHECKED_GL_CALL(glBindVertexArray, parallax->vao());
+    CHECKED_GL_CALL(glActiveTexture, GL_TEXTURE0);
+    CHECKED_GL_CALL(glBindTexture, GL_TEXTURE_2D, parallax->diffuse()->id());
+    shader->set_int("texture_diffuse1", 0);
+    CHECKED_GL_CALL(glActiveTexture, GL_TEXTURE1);
+    CHECKED_GL_CALL(glBindTexture, GL_TEXTURE_2D, parallax->normal()->id());
+    shader->set_int("texture_normal1", 1);
+    CHECKED_GL_CALL(glActiveTexture, GL_TEXTURE2);
+    CHECKED_GL_CALL(glBindTexture, GL_TEXTURE_2D, parallax->height()->id());
+    shader->set_int("texture_height1", 2);
+    CHECKED_GL_CALL(glDrawArrays, GL_TRIANGLES, 0, 6);
+    CHECKED_GL_CALL(glBindVertexArray, 0);
 }
 }// namespace engine::graphics

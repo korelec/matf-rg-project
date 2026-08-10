@@ -7,6 +7,7 @@
 #include <engine/resources/Shader.hpp>
 #include <engine/resources/ShaderCompiler.hpp>
 #include <engine/resources/Skybox.hpp>
+#include <engine/resources/ParallaxMapping.hpp>
 #include <engine/util/Errors.hpp>
 #include <engine/util/Utils.hpp>
 #include <filesystem>
@@ -78,6 +79,37 @@ uint32_t OpenGL::init_skybox_cube() {
     CHECKED_GL_CALL(glEnableVertexAttribArray, 0);
     CHECKED_GL_CALL(glVertexAttribPointer, 0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);// NOLINT
     return skybox_vao;
+}
+uint32_t OpenGL::init_parallax_mapping() {
+    static uint32_t quad_vao = 0;
+    if (quad_vao != 0) return quad_vao;
+
+    float vertices[] = {
+        #include <parallax_vertices.include>
+    };
+
+    uint32_t quad_vbo = 0;
+    CHECKED_GL_CALL(glGenVertexArrays, 1, &quad_vao);
+    CHECKED_GL_CALL(glGenBuffers, 1, &quad_vbo);
+    CHECKED_GL_CALL(glBindVertexArray, quad_vao);
+    CHECKED_GL_CALL(glBindBuffer, GL_ARRAY_BUFFER, quad_vbo);
+    CHECKED_GL_CALL(glBufferData, GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    int stride = 14 * sizeof(float);
+
+    CHECKED_GL_CALL(glEnableVertexAttribArray, 0);
+    CHECKED_GL_CALL(glVertexAttribPointer, 0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
+    CHECKED_GL_CALL(glEnableVertexAttribArray, 1);
+    CHECKED_GL_CALL(glVertexAttribPointer, 1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(3*sizeof(float)));
+    CHECKED_GL_CALL(glEnableVertexAttribArray, 2);
+    CHECKED_GL_CALL(glVertexAttribPointer, 2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(6*sizeof(float)));
+    CHECKED_GL_CALL(glEnableVertexAttribArray, 3);
+    CHECKED_GL_CALL(glVertexAttribPointer, 3, 3, GL_FLOAT, GL_FALSE, stride, (void*)(8*sizeof(float)));
+    CHECKED_GL_CALL(glEnableVertexAttribArray, 4);
+    CHECKED_GL_CALL(glVertexAttribPointer, 4, 3, GL_FLOAT, GL_FALSE, stride, (void*)(11*sizeof(float)));
+
+    return quad_vao;
+
 }
 
 bool OpenGL::shader_compiled_successfully(uint32_t shader_id) {

@@ -225,15 +225,25 @@ void MainController::draw_floor() {
         auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
 
+        auto *surface = resources->parallax("ground",
+            "resources/models/ground/ground_0029_color_2k.jpg",
+            "resources/models/ground/ground_0029_normal_opengl_2k.png",
+            "resources/models/ground/ground_0029_height_2k.png");
+
         resources::Shader *shader = resources->shader("floor");
         define_light(shader);
         shader->set_mat4("projection", graphics->projection_matrix());
         shader->set_mat4("view",       graphics->camera()->view_matrix());
-        shader->set_mat4("model",      glm::mat4(1.0f));
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::scale(model, glm::vec3(150.0f, 1.0f, 150.0f));//pokirva krug drveca ne menjaj vise
+        shader->set_mat4("model", model);
+        //shader->set_mat4("model",      glm::mat4(1.0f));
         shader->set_vec3("viewPos",    graphics->camera()->Position);
-        shader->set_float("tileScale",20.0);
+        shader->set_float("tileScale",15.0);
 
-        resources->model("ground")->draw(shader);
+        graphics->draw_parallax_mapping(shader, surface);
+
+        // resources->model("ground")->draw(shader);
     }
 
 void MainController::draw_skybox() {

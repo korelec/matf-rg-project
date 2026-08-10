@@ -12,6 +12,7 @@
 
 namespace engine::resources {
 class Skybox;
+class Parallax;
 }
 
 /**
@@ -92,7 +93,7 @@ public:
     * @returns VAO of the cube used for skybox drawing.
     */
     static uint32_t init_skybox_cube();
-
+    static uint32_t init_parallax_mapping();
     /**
     * @brief Check if the shader with the `shader_id` compiled successfully.
     * @returns true if the shader compilation succeeded, false otherwise.
