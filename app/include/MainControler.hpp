@@ -47,6 +47,7 @@ private:
     void draw_skybox();
 
     void update_camera();
+    float holdTime = 0.0f;
 };
 }
 

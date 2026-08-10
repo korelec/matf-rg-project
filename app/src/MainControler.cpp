@@ -23,7 +23,8 @@ namespace engine::app {
 
     void MainPlatformEventObserver::on_mouse_move(engine::platform::MousePosition position) {
         auto gui_controller=engine::core::Controller::get<GUIController>();
-        if (!gui_controller->is_enabled()) {
+        auto gui_light_controller=engine::core::Controller::get<GUILightController>();
+        if (!gui_controller->is_enabled() || !gui_light_controller->is_enabled()) {
             auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
             camera->rotate_camera(position.dx, position.dy);
 
@@ -274,7 +275,8 @@ void MainController::draw_skybox() {
 
     void MainController::update_camera() {
         auto gui = engine::core::Controller::get<app::GUIController>();
-        if (gui->is_enabled()) {
+        auto guil=engine::core::Controller::get<app::GUILightController>();
+        if (gui->is_enabled() || guil->is_enabled()) {
             return;
         }
 
@@ -283,24 +285,44 @@ void MainController::draw_skybox() {
         auto camera   = graphic->camera();
         float dt      = platform->dt();
 
-        // Use Pressed so holding the key moves continuously (JustPressed moves only for one frame).
+        bool isMoving =
+            platform->key(engine::platform::KeyId::KEY_W).is_down() ||
+            platform->key(engine::platform::KeyId::KEY_A).is_down() ||
+            platform->key(engine::platform::KeyId::KEY_S).is_down() ||
+            platform->key(engine::platform::KeyId::KEY_D).is_down() ||
+            platform->key(engine::platform::KeyId::KEY_Q).is_down() ||
+            platform->key(engine::platform::KeyId::KEY_E).is_down();
+
+        if (isMoving) {
+            holdTime += dt;
+        }else {
+            holdTime=0.0f;//mora inace bi se svaki frame resetovalo
+        }
+
+        float speed = 1.0f;
+        if (holdTime >= 7.0f) {//B
+            speed = 5.0f;
+        } else if (holdTime >= 2.0f) {//A
+            speed = 2.0f;
+        }
+
         if (platform->key(engine::platform::KeyId::KEY_W).is_down()) {
-            camera->move_camera(engine::graphics::Camera::Movement::FORWARD, dt);
+            camera->move_camera(engine::graphics::Camera::Movement::FORWARD, dt*speed);
         }
         if (platform->key(engine::platform::KeyId::KEY_A).is_down()) {
-            camera->move_camera(engine::graphics::Camera::Movement::LEFT, dt);
+            camera->move_camera(engine::graphics::Camera::Movement::LEFT, dt*speed);
         }
         if (platform->key(engine::platform::KeyId::KEY_S).is_down()) {
-            camera->move_camera(engine::graphics::Camera::Movement::BACKWARD, dt);
+            camera->move_camera(engine::graphics::Camera::Movement::BACKWARD, dt*speed);
         }
         if (platform->key(engine::platform::KeyId::KEY_D).is_down()) {
-            camera->move_camera(engine::graphics::Camera::Movement::RIGHT, dt);
+            camera->move_camera(engine::graphics::Camera::Movement::RIGHT, dt*speed);
         }
         if (platform->key(engine::platform::KeyId::KEY_Q).is_down()) {
-            camera->move_camera(engine::graphics::Camera::Movement::UP, dt);
+            camera->move_camera(engine::graphics::Camera::Movement::UP, dt*speed);
         }
         if (platform->key(engine::platform::KeyId::KEY_E).is_down()) {
-            camera->move_camera(engine::graphics::Camera::Movement::DOWN, dt);
+            camera->move_camera(engine::graphics::Camera::Movement::DOWN, dt*speed);
         }
         auto mouse = platform->mouse();
         //spdlog::info("Scroll value: {}",  mouse.scroll);
