@@ -10,6 +10,7 @@
 #include <engine/resources/Model.hpp>
 #include <engine/resources/Shader.hpp>
 #include <engine/resources/Skybox.hpp>
+#include <engine/resources/ParallaxMapping.hpp>
 #include <engine/resources/Texture.hpp>
 #include <unordered_map>
 
@@ -62,6 +63,13 @@ public:
                    const std::filesystem::path &path = "", bool flip_uvs = false);
 
     /**
+    * @brief Loads (or returns a cached) parallax-mapped surface by name, reading texture paths from config.json.
+    * @param name The name of the parallax surface, as specified in config.json under resources/parallax.
+    * @returns The pointer to the @ref Parallax surface associated with the `name`.
+    */
+    Parallax *parallax(const std::string &name);
+
+    /**
     * @brief Retrieves the @ref Shader with a given name. You are not supposed to call `delete` on this pointer.
     * @param name of the .glsl file in the `resources/shaders` directory
     * @param path to the shader.glsl file that contains shader source code.
@@ -112,6 +120,7 @@ private:
     * @brief A hashmap of all the loaded @ref Skybox.
     */
     std::unordered_map<std::string, std::unique_ptr<Skybox>> m_sky_boxes;
+    std::unordered_map<std::string,std::unique_ptr<Parallax>> m_parallax;
     /**
     * @brief A hashmap of all the loaded @ref Shader.
     */
@@ -121,6 +130,7 @@ private:
     const std::filesystem::path m_textures_path = "resources/textures";
     const std::filesystem::path m_shaders_path = "resources/shaders";
     const std::filesystem::path m_skyboxes_path = "resources/skyboxes";
+    const std::filesystem::path m_parallax_path = "resources/parallax";
 };
 }// namespace engine::resources
 

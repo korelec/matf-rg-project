@@ -1,6 +1,33 @@
 {
   "resources": {
     "models": {
+      "fire": {
+        "path": "Fire/model.obj",
+        "flip_uvs": true
+      },
+      "cottage": {
+        "path": "LogCabin/Cottage.obj",
+        "flip_uvs": true
+      },
+      "tree1": {
+        "path": "Tree/tree01.obj",
+        "flip_uvs": true
+      },
+      "log": {
+        "path": "Log/PUSHILIN_log.obj",
+        "flip_uvs": true
+      },
+      "firepit": {
+        "path": "campfire/campfire.obj",
+        "flip_uvs": true
+      }
+    },
+    "parallax": {
+      "ground": {
+        "diffuse": "ground/ground_0029_color_2k.jpg",
+        "normal":  "ground/ground_0029_normal_opengl_2k.png",
+        "height":  "ground/ground_0029_height_2k.png"
+      }
     }
   },
   "window": {
