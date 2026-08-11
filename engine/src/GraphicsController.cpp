@@ -16,7 +16,7 @@ namespace engine::graphics {
 void GraphicsController::initialize() {
     const int opengl_initialized = gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
     RG_GUARANTEE(opengl_initialized, "OpenGL failed to init!");
-
+    m_quad = OpenGL::init_quad();
     auto platform = engine::core::Controller::get<platform::PlatformController>();
     auto handle = platform->window()->handle_();
     m_perspective_params.FOV = glm::radians(m_camera.Zoom);

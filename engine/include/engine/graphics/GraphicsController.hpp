@@ -9,6 +9,7 @@
 #include <engine/core/Controller.hpp>
 #include <engine/graphics/Camera.hpp>
 #include <engine/platform/PlatformEventObserver.hpp>
+#include <engine/graphics/OpenGL.hpp>
 
 struct ImGuiContext;
 
@@ -86,6 +87,11 @@ public:
     * @brief Draws a @ref resources::Skybox with the @ref resources::Shader.
     */
     void draw_skybox(const resources::Shader *shader, const resources::Skybox *skybox);
+
+    /**
+    * @brief Returns the shared quad geometry used for flat, texture-mapped surfaces.
+    * @returns The @ref OpenGL::GLQuad.
+    */
     void draw_parallax_mapping(const resources::Shader *shader,const resources::Parallax *parallax);
     Camera *camera() {
         return &m_camera;
@@ -154,6 +160,14 @@ public:
         return m_ortho_params;
     }
 
+    /**
+    * @brief Returns the shared quad geometry used for flat, texture-mapped surfaces.
+    * @returns The @ref OpenGL::GLQuad.
+    */
+    const OpenGL::GLQuad &quad() const {
+        return m_quad;
+    }
+
 private:
     /**
     * @brief Initializes OpenGL, ImGUI, and projection matrix params;
@@ -168,6 +182,7 @@ private:
     glm::mat4 m_projection_matrix{};
     Camera m_camera{};
     ImGuiContext *m_imgui_context{};
+    OpenGL::GLQuad m_quad;
 };
 
 /**

@@ -24,7 +24,7 @@ private:
 
     bool loop() override;
 
-    void poll_events() override;
+
 
     void update() override;
 

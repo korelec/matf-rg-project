@@ -3,7 +3,6 @@
 //
 
 #include "../include/MainControler.hpp"
-#include <GuiControler.hpp>
 #include <GuiLightController.hpp>
 #include <engine/graphics/Camera.hpp>
 
@@ -22,9 +21,9 @@ namespace engine::app {
     };
 
     void MainPlatformEventObserver::on_mouse_move(engine::platform::MousePosition position) {
-        auto gui_controller=engine::core::Controller::get<GUIController>();
+
         auto gui_light_controller=engine::core::Controller::get<GUILightController>();
-        if (!gui_controller->is_enabled() || !gui_light_controller->is_enabled()) {
+        if (!gui_light_controller->is_enabled()) {
             auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
             camera->rotate_camera(position.dx, position.dy);
 
@@ -32,7 +31,7 @@ namespace engine::app {
     }
 
     void MainPlatformEventObserver::on_scroll(engine::platform::MousePosition position) {
-        auto gui = engine::core::Controller::get<GUIController>();
+        auto gui = engine::core::Controller::get<GUILightController>();
         if (!gui->is_enabled()) {
             auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
             camera->zoom(position.y);
@@ -57,8 +56,6 @@ namespace engine::app {
         return true;
     }
 
-    void MainController::poll_events() {
-    }
 
     void MainController::update() {
         update_camera();
@@ -91,7 +88,6 @@ namespace engine::app {
 
 
     void MainController::draw_firepit() {
-        //model
         auto resources            = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics             = engine::core::Controller::get<engine::graphics::GraphicsController>();
         resources::Model *firepit = resources->model("firepit");
@@ -132,11 +128,11 @@ void MainController::draw_fire() {
 
 
 void MainController::draw_log1() {
-        //model
+
         auto resources            = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics             = engine::core::Controller::get<engine::graphics::GraphicsController>();
         resources::Model *log= resources->model("log");
-        //shader
+
         resources::Shader *shader = resources->shader("first");
         define_light(shader);
 
@@ -154,11 +150,10 @@ void MainController::draw_log1() {
     }
 
 void MainController::draw_log2() {
-        //model
+
         auto resources            = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics             = engine::core::Controller::get<engine::graphics::GraphicsController>();
         resources::Model *log= resources->model("log");
-        //shader
         resources::Shader *shader = resources->shader("first");
         define_light(shader);
 
@@ -175,11 +170,11 @@ void MainController::draw_log2() {
 
     }
 void MainController::draw_cottage() {
-        //model
+
         auto resources            = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics             = engine::core::Controller::get<engine::graphics::GraphicsController>();
         resources::Model *cottage = resources->model("cottage");
-        //shader
+
         resources::Shader *shader = resources->shader("first");
         define_light(shader);
         shader->set_mat4("projection", graphics->projection_matrix());
@@ -211,7 +206,7 @@ void MainController::draw_trees() {
                 float ugao=(2.0f* glm::pi<float>() / 20)*i+p;
                 float x=cos(ugao)*(45.0f+8.0f*j)+10.0f;
                 float z=sin(ugao)*(45.0f+8.0f*j)-30.0f;
-                //resources::Model *tree=tree_models[i%3];
+
                 glm::mat4 model = glm::mat4(1.0f);
                 model = glm::translate(model, glm::vec3(x, 0.0f, z));
                 model = glm::rotate(model, ugao + glm::pi<float>(), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -226,10 +221,7 @@ void MainController::draw_floor() {
         auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
 
-        auto *surface = resources->parallax("ground",
-            "resources/models/ground/ground_0029_color_2k.jpg",
-            "resources/models/ground/ground_0029_normal_opengl_2k.png",
-            "resources/models/ground/ground_0029_height_2k.png");
+        auto *surface = resources->parallax("ground");
 
         resources::Shader *shader = resources->shader("floor");
         define_light(shader);
@@ -238,13 +230,11 @@ void MainController::draw_floor() {
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::scale(model, glm::vec3(150.0f, 1.0f, 150.0f));//pokirva krug drveca ne menjaj vise
         shader->set_mat4("model", model);
-        //shader->set_mat4("model",      glm::mat4(1.0f));
         shader->set_vec3("viewPos",    graphics->camera()->Position);
         shader->set_float("tileScale",15.0);
 
         graphics->draw_parallax_mapping(shader, surface);
 
-        // resources->model("ground")->draw(shader);
     }
 
 void MainController::draw_skybox() {
@@ -274,9 +264,8 @@ void MainController::draw_skybox() {
     }
 
     void MainController::update_camera() {
-        auto gui = engine::core::Controller::get<app::GUIController>();
         auto guil=engine::core::Controller::get<app::GUILightController>();
-        if (gui->is_enabled() || guil->is_enabled()) {
+        if (guil->is_enabled()) {
             return;
         }
 
@@ -296,7 +285,7 @@ void MainController::draw_skybox() {
         if (isMoving) {
             holdTime += dt;
         }else {
-            holdTime=0.0f;//mora inace bi se svaki frame resetovalo
+            holdTime=0.0f;
         }
 
         float speed = 1.0f;
@@ -325,7 +314,7 @@ void MainController::draw_skybox() {
             camera->move_camera(engine::graphics::Camera::Movement::DOWN, dt*speed);
         }
         auto mouse = platform->mouse();
-        //spdlog::info("Scroll value: {}",  mouse.scroll);
+
         camera->rotate_camera(mouse.dx, mouse.dy);
         if (mouse.scroll != 0.0f){
             camera->zoom(mouse.scroll);

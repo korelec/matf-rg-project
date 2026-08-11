@@ -61,10 +61,13 @@ public:
     */
     Skybox *skybox(const std::string &name,
                    const std::filesystem::path &path = "", bool flip_uvs = false);
-    Parallax *parallax(const std::string &name,
-                    const std::filesystem::path &diffuse_path,
-                    const std::filesystem::path &normal_path,
-                    const std::filesystem::path &height_path);
+
+    /**
+    * @brief Loads (or returns a cached) parallax-mapped surface by name, reading texture paths from config.json.
+    * @param name The name of the parallax surface, as specified in config.json under resources/parallax.
+    * @returns The pointer to the @ref Parallax surface associated with the `name`.
+    */
+    Parallax *parallax(const std::string &name);
 
     /**
     * @brief Retrieves the @ref Shader with a given name. You are not supposed to call `delete` on this pointer.

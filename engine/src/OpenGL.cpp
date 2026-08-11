@@ -80,19 +80,18 @@ uint32_t OpenGL::init_skybox_cube() {
     CHECKED_GL_CALL(glVertexAttribPointer, 0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);// NOLINT
     return skybox_vao;
 }
-uint32_t OpenGL::init_parallax_mapping() {
-    static uint32_t quad_vao = 0;
-    if (quad_vao != 0) return quad_vao;
+OpenGL::GLQuad OpenGL::init_quad() {
+    GLQuad quad;
 
     float vertices[] = {
         #include <parallax_vertices.include>
     };
 
-    uint32_t quad_vbo = 0;
-    CHECKED_GL_CALL(glGenVertexArrays, 1, &quad_vao);
-    CHECKED_GL_CALL(glGenBuffers, 1, &quad_vbo);
-    CHECKED_GL_CALL(glBindVertexArray, quad_vao);
-    CHECKED_GL_CALL(glBindBuffer, GL_ARRAY_BUFFER, quad_vbo);
+    
+    CHECKED_GL_CALL(glGenVertexArrays, 1, &quad.vao);
+    CHECKED_GL_CALL(glGenBuffers, 1, &quad.vbo);
+    CHECKED_GL_CALL(glBindVertexArray, quad.vao);
+    CHECKED_GL_CALL(glBindBuffer, GL_ARRAY_BUFFER, quad.vbo);
     CHECKED_GL_CALL(glBufferData, GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     int stride = 14 * sizeof(float);
@@ -108,7 +107,7 @@ uint32_t OpenGL::init_parallax_mapping() {
     CHECKED_GL_CALL(glEnableVertexAttribArray, 4);
     CHECKED_GL_CALL(glVertexAttribPointer, 4, 3, GL_FLOAT, GL_FALSE, stride, (void*)(11*sizeof(float)));
 
-    return quad_vao;
+    return quad;
 
 }
 

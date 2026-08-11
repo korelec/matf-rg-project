@@ -93,7 +93,22 @@ public:
     * @returns VAO of the cube used for skybox drawing.
     */
     static uint32_t init_skybox_cube();
-    static uint32_t init_parallax_mapping();
+
+    /**
+    * @struct GLQuad
+    * @brief Holds the OpenGL IDs of a generic quad used for flat, texture-mapped surfaces (e.g. parallax mapping).
+    */
+    struct GLQuad {
+        uint32_t vao{0};
+        uint32_t vbo{0};
+    };
+
+    /**
+    * @brief Initializes the Vertex Array Object of a generic quad with position, normal, UV, tangent, and bitangent attributes.
+    * @returns The @ref GLQuad containing the VAO and VBO IDs.
+    */
+    static GLQuad init_quad();
+
     /**
     * @brief Check if the shader with the `shader_id` compiled successfully.
     * @returns true if the shader compilation succeeded, false otherwise.

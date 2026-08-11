@@ -13,8 +13,7 @@ S -> backward
 D -> right  
 Q -> up  
 E -> down  
-F -> on/off gui for light   
-F1 -> on/off gui for camera position  
+F -> on/off gui for light
 scroll -> zoom
 ## Features
 

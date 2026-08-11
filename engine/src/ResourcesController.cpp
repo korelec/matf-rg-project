@@ -164,17 +164,23 @@ Skybox *ResourcesController::skybox(const std::string &name, const std::filesyst
     }
     return result.get();
 }
-Parallax *ResourcesController::parallax(const std::string &name,
-        const std::filesystem::path &diffuse_path,
-        const std::filesystem::path &normal_path,
-        const std::filesystem::path &height_path) {
+Parallax *ResourcesController::parallax(const std::string &name) {
     auto &result = m_parallax[name];
     if (!result) {
-        auto vao = graphics::OpenGL::init_parallax_mapping();
-        auto *d = texture(name + "_d", diffuse_path, TextureType::Diffuse);
-        auto *n = texture(name + "_n", normal_path, TextureType::Normal);
-        auto *h = texture(name + "_h", height_path, TextureType::Height);
-        result = std::make_unique<Parallax>(Parallax(vao, d, n, h));
+
+        auto &config = util::Configuration::config();
+        if (!config["resources"]["parallax"].contains(name)) {
+            std::string msg = std::format("No parallax ({}) specify in config.json. Please add the model to the config.json.", name);
+            throw util::EngineError(util::EngineError::Type::ConfigurationError, msg);
+        }
+        std::filesystem::path diffuse_path = m_parallax_path / std::filesystem::path(config["resources"]["parallax"][name]["diffuse"].get<std::string>());
+        std::filesystem::path normal_path  = m_parallax_path / std::filesystem::path(config["resources"]["parallax"][name]["normal"].get<std::string>());
+        std::filesystem::path height_path  = m_parallax_path / std::filesystem::path(config["resources"]["parallax"][name]["height"].get<std::string>());
+
+        auto *_diffuse = texture(name + "_diffuse", diffuse_path, TextureType::Diffuse);
+        auto *_normal= texture(name + "_normal", normal_path, TextureType::Normal);
+        auto *_height = texture(name + "_height", height_path, TextureType::Height);
+        result = std::make_unique<Parallax>(Parallax( _diffuse, _normal, _height));
     }
     return result.get();
 
